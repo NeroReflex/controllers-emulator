@@ -48,7 +48,7 @@ pub struct OutDeviceMessage {
 // Messages that are outgoing from the controller emulator to the input handler
 #[derive(Copy, Clone, PartialEq)]
 pub enum OutMessage {
-
+    Device(OutDeviceMessage)
 }
 
 // Messages that are incoming from the input handler to the controller emulator

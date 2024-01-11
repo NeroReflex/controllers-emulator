@@ -5,6 +5,7 @@ use crate::message::{InDeviceDataMessage, OutDeviceDataMessage};
 pub struct DualSenseSettings {
     pub bluetooth: bool,
     pub edge: bool,
+    pub mac_addr: [u8; 6],
 }
 
 impl Default for DualSenseSettings {
@@ -12,6 +13,7 @@ impl Default for DualSenseSettings {
         Self {
             bluetooth: true,
             edge: false,
+            mac_addr: [ 0x74u8, 0xe7u8, 0xd6u8, 0x3au8, 0x47u8, 0xe8u8 ],
         }
     }
 }
