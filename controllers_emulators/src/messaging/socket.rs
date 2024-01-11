@@ -38,7 +38,6 @@ where
 {
     socket: TcpStream,
     serializer: S,
-    queued_bytes: Vec<u8>,
 }
 
 impl<S> TcpSocketMessagingInterface<S>
@@ -49,7 +48,6 @@ where
         Self {
             socket,
             serializer: S::default(),
-            queued_bytes: Vec::<u8>::new()
         }
     }
 }
