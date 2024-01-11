@@ -1,3 +1,5 @@
+use crate::gamepad::GamepadStatus;
+
 
 // Messages that are incoming from the input handler to the controller emulator about the emulated gamepad
 #[derive(Copy, Clone, PartialEq)]
@@ -14,7 +16,7 @@ pub enum InKeyboardMessage {
 // Messages that are incoming from the input handler to the controller emulator about the emulated gamepad
 #[derive(Copy, Clone, PartialEq)]
 pub enum InGamepadMessage {
-    
+    SetStatus(GamepadStatus)
 }
 
 #[derive(Copy, Clone, PartialEq)]
