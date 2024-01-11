@@ -31,7 +31,10 @@ impl DeviceManager {
     }
 
     pub fn fetch(&self, hash: u64) -> Option<Arc<Mutex<dyn Device>>> {
-        None
+        match self.devices.get(&hash) {
+            Some(dev) => Some(dev.clone()),
+            None => None
+        }
     }
 }
 

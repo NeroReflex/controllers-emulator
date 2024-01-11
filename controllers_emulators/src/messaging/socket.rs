@@ -15,8 +15,8 @@ pub struct TcpSocketMessagingInterfaceError {
 }
 
 impl std::fmt::Display for TcpSocketMessagingInterfaceError {
-    fn fmt(&self, _: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
-        todo!()
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(f, "{}", self.error_msg)
     }
 }
 
@@ -57,19 +57,19 @@ where
     S: MessageSerializer + Default
 {
     async fn recv(&mut self) -> Result<Option<InMessage>, Box<dyn std::error::Error>> {
-        let default_capacity: usize = 1024;
+        const DEFAULT_CAPACITY: usize = 1024;
 
-        let mut tmp_buf = Vec::<u8>::with_capacity(default_capacity);
+        let mut tmp_buf = vec![0; DEFAULT_CAPACITY];
 
         let read_size = if let Some(exact_size) = self.serializer.fixed_size() {
-            if exact_size > default_capacity {
-                tmp_buf = Vec::<u8>::with_capacity(exact_size);
-            }
+            tmp_buf = vec![0; exact_size];
 
             self.socket.read_exact(tmp_buf.as_mut()).await?
         } else {
             self.socket.read(tmp_buf.as_mut()).await?
         };
+
+        println!("Received {} bytes", read_size);
 
         if read_size == 0 {
             return Err(Box::new(TcpSocketMessagingInterfaceError::new(String::from("read 0 bytes from stream, probably no more data is coming"))));

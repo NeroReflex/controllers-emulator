@@ -26,13 +26,15 @@ pub struct DualSense {
 impl Device for DualSense {
     fn handle_message(&mut self, msg: &InDeviceDataMessage) {
         match msg {
-            &InDeviceDataMessage::Gamepad(gamepad_msg) => crate::gamepad::process_gamepad_message(self, &gamepad_msg),
+            InDeviceDataMessage::Gamepad(gamepad_msg) => crate::gamepad::process_gamepad_message(self, &gamepad_msg),
             _ => println!("Message type not implemented")
         }
     }
 
     fn generate_message(&mut self) -> Option<OutDeviceDataMessage> {
-        todo!()
+        println!("Unimplemented feature!");
+        //todo!()
+        None
     }
 }
 
