@@ -1,0 +1,9 @@
+[package]
+name = "examples"
+version = "0.0.1"
+authors = ["Denis Benato <benato.denis96@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+controllers_emulators = { path = "../controllers_emulators" }
+tokio = { version = "1", features = ["full"] }
