@@ -191,6 +191,14 @@ pub trait Gamepad: Device {
 
 pub(crate) fn process_gamepad_message(gamepad: &mut dyn Gamepad, msg: &InGamepadMessage) {
     match msg {
-        &InGamepadMessage::SetStatus(stat) => gamepad.set_status(&stat)
+        &InGamepadMessage::SetStatus(stat) => {
+            gamepad.set_status(&stat);
+        
+            if stat.btn_cross_pressed() {
+                println!("CROSS pressed");
+            } else {
+                println!("CROSS is not pressed");
+            }
+        }
     }
 }

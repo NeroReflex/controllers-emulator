@@ -17,7 +17,7 @@ extern crate tokio;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dev_mananager = Arc::new(Mutex::new(DeviceManager::default()));
 
-    let dualsense_hash = dev_mananager.lock().unwrap().alloc(Arc::new(Mutex::new(DualSense::new(DualSenseSettings::default()))));
+    let dualsense_hash = dev_mananager.lock().unwrap().alloc(Arc::new(Mutex::new(DualSense::new(DualSenseSettings::default()).unwrap())));
 
     println!("Added Dualsense with hash {}", dualsense_hash);
 

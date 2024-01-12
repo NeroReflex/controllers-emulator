@@ -1,4 +1,4 @@
-use crate::gamepad::GamepadStatus;
+use crate::gamepad::{GamepadStatus, DPadStatus};
 use crate::message_serializer::MessageSerializer;
 
 use crate::message::{Message, InDeviceMessage, InMessage, InDeviceDataMessage, InGamepadMessage};
@@ -93,6 +93,51 @@ impl MessageSerializer for FixedBytesMessageSerializer {
                                 match bytes[decoded] {
                                     IN_DEV_PERIPHERIAL_GAMEPAD_SET_STATUS_MSG_TYPE => {
                                         decoded += 1;
+
+                                        let buttons_bytes = [
+                                            bytes[decoded+0] as u64,
+                                            bytes[decoded+1] as u64,
+                                            bytes[decoded+2] as u64,
+                                            bytes[decoded+3] as u64,
+                                            bytes[decoded+4] as u64,
+                                            bytes[decoded+5] as u64,
+                                            bytes[decoded+6] as u64,
+                                            bytes[decoded+7] as u64,
+                                        ];
+
+                                        decoded += 8;
+
+                                        let buttons: u64 = 
+                                            (buttons_bytes[0] << 0) |
+                                            (buttons_bytes[1] << 8) |
+                                            (buttons_bytes[2] << 16) |
+                                            (buttons_bytes[3] << 24) |
+                                            (buttons_bytes[4] << 32) |
+                                            (buttons_bytes[5] << 40) |
+                                            (buttons_bytes[6] << 48) |
+                                            (buttons_bytes[7] << 56);
+                                        
+                                        let gamepad_status = GamepadStatus {
+                                            buttons,
+                                            joystick_positions: [[0; 2]; 2],
+                                            dpad: DPadStatus::default(),
+                                            l2_trigger: 0,
+                                            r2_trigger: 0,
+                                            touchpad_touch_num: 0,
+                                            touchpad_x: 0,
+                                            touchpad_y: 0,
+                                            last_gyro_motion_timestamp_ns: 0,
+                                            last_accel_motion_timestamp_ns: 0,
+                                            raw_gyro: [0; 3],
+                                            raw_accel: [0; 3],
+                                            rumble_events_count: 0,
+                                            motors_intensity: [0; 2],
+                                            leds_events_count: 0,
+                                            leds_colors: [0; 3],
+                                            join_left_analog_and_gyroscope: 0,
+                                            join_right_analog_and_gyroscope: 0,
+                                        };
+
                                         Ok(
                                             Message::In(
                                                 InMessage::Device(
@@ -100,7 +145,7 @@ impl MessageSerializer for FixedBytesMessageSerializer {
                                                         device_hash: device_hash,
                                                         data: InDeviceDataMessage::Gamepad(
                                                             InGamepadMessage::SetStatus(
-                                                                GamepadStatus::default()
+                                                                gamepad_status
                                                             )
                                                         )
                                                     }
