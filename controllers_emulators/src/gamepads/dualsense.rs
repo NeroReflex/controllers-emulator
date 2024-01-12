@@ -44,7 +44,38 @@ impl Device for DualSense {
     }
 
     fn read_requests(&mut self) {
+        match self.device.read() {
+            Ok(out_ev) => {
+                match out_ev {
+                    uhid_virt::OutputEvent::Start { dev_flags } => {},
+                    uhid_virt::OutputEvent::Open => {},
+                    uhid_virt::OutputEvent::Close => {},
+                    uhid_virt::OutputEvent::Stop => {},
+                    uhid_virt::OutputEvent::SetReport { id, report_number, report_type, data } => {
+                        println!("SetReport id: {}, report_number: {}", id, report_number);
+                    },
+                    uhid_virt::OutputEvent::GetReport { id, report_number, report_type } => {
+                        println!("GetReport id: {}, report_number: {}", id, report_number);
 
+                        if report_number == 0x09 {
+                            // pairing info
+                            println!("DualSense pairing info requested");
+                            let _ = self.device.write_get_report_reply(id, 0, vec![
+                                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                0x00, 0x00, 0x00, 0x00,
+                            ]);
+                        } else if report_number == 0x20 {
+                            // report info
+                        }
+                    },
+                    _ => {}
+                }
+            },
+            Err(stream_err) => {
+
+            }
+        }
     }
 
     fn handle_message(&mut self, msg: &InDeviceDataMessage) {
